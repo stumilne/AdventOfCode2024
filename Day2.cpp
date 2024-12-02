@@ -24,53 +24,71 @@ namespace day2
 		};
 
 		stu::doPerLine(inInput, countUnSafeFunc);
-
-		static constexpr int kMaxAllowableLevelChange = 3;
-		int numUnsafeReports = 0;
-
-		enum class LevelChangeType { Increasing, Decreasing, Unknown };
-
+	
+		int numSafeReports = 0;
 		for (auto&& report : reports)
 		{
-			const auto levelChangeType = report[0] > report[1] ? LevelChangeType::Decreasing : report[0] < report[1] ? LevelChangeType::Increasing : LevelChangeType::Unknown;
-			if (levelChangeType == LevelChangeType::Unknown)
+			const auto [unsafe, firstFailIndex] = isUnsafe(report);
+			if (unsafe)
 			{
-				++numUnsafeReports;
-				continue;
-			}
-
-			int prevLevel = report[0];
-			for (int i = 1; i < report.size(); ++i)
-			{
-				const auto level = report[i];
-				if (levelChangeType == LevelChangeType::Increasing && level > prevLevel)
+				const auto originalReport = report;
+				// Brute force, re-try the report for every combo with one element removed
+				// If any pass, its good
+				for (int i = 0; i < originalReport.size(); ++i)
 				{
-					if ((level - prevLevel) > kMaxAllowableLevelChange)
+					report = originalReport;
+					report.erase(report.begin() + i);
+					const auto [fail, index] = isUnsafe(report);
+					if (!fail)
 					{
-					  prevLevel = level;
-					  ++numUnsafeReports;
-					  break;
-					}
-				}
-				else if (levelChangeType == LevelChangeType::Decreasing && level < prevLevel)
-				{
-					if ((prevLevel - level) > kMaxAllowableLevelChange)
-					{
-						prevLevel = level;
-						++numUnsafeReports;
+						++numSafeReports;
 						break;
 					}
 				}
-				else
-				{
-					prevLevel = level;
-					++numUnsafeReports;
-					break;
-				}
-				prevLevel = level;
 			}
+			else
+			{
+				++numSafeReports;
+			}		
+		}
+		return numSafeReports;
+	}
+
+	std::pair<bool, int> isUnsafe(std::vector<int> inReport)
+	{
+		static constexpr int kMaxAllowableLevelChange = 3;
+		enum class LevelChangeType { Increasing, Decreasing, Unknown };
+		const auto levelChangeType = inReport[0] > inReport[1] ? LevelChangeType::Decreasing : inReport[0] < inReport[1] ? LevelChangeType::Increasing : LevelChangeType::Unknown;
+		
+		if (levelChangeType == LevelChangeType::Unknown)
+		{
+			return { true, 0 };
 		}
 
-		return reports.size() - numUnsafeReports;
+		int prevLevel = inReport[0];
+		for (int i = 1; i < inReport.size(); ++i)
+		{
+			const auto level = inReport[i];
+			if (levelChangeType == LevelChangeType::Increasing && level > prevLevel)
+			{
+				if ((level - prevLevel) > kMaxAllowableLevelChange)
+				{
+					return { true, i };
+				}
+			}
+			else if (levelChangeType == LevelChangeType::Decreasing && level < prevLevel)
+			{
+				if ((prevLevel - level) > kMaxAllowableLevelChange)
+				{
+					return { true, i };
+				}
+			}
+			else
+			{
+				return { true, i };
+			}
+			prevLevel = level;
+		}
+		return { false, -1 };
 	}
 }
