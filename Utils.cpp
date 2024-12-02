@@ -16,4 +16,14 @@ namespace stu
 
         return result;
     }
+    void doPerLine(const char* inInput, std::function<void(const std::string&)> inFunc)
+    {
+        std::stringstream stream{ inInput };
+        std::string line{};
+
+        while (std::getline(stream, line))
+        {
+            inFunc(line);
+        }
+    }
 }
