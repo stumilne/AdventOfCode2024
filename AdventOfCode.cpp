@@ -16,7 +16,7 @@ int main()
     std::println("stumilne's Advent of Code 2024");
     {
         // Day 1
-        const auto input = stu::readFile("day1.txt");
+        const auto input = stu::readFile("input/day1.txt");
         auto [locationListA, locationListB] = day1::GetLocationIDsFromInput(input.c_str());
         const auto listDistance = day1::getDistanceBetweenLocationIDLists(locationListA, locationListB);
         const auto similarity = day1::getSimilarity(locationListA, locationListB);
@@ -27,7 +27,7 @@ int main()
     }
 
     {
-        const auto input = stu::readFile("day2.txt");
+        const auto input = stu::readFile("input/day2.txt");
         const auto numSafeReports = day2::countSafeReports(input.c_str());
 
         startDay(2);
@@ -35,7 +35,7 @@ int main()
     }
     
     {
-        const auto input = stu::readFile("day3.txt");
+        const auto input = stu::readFile("input/day3.txt");
         const auto sumOfMuls = day3::parseMulInput(input);
 
         startDay(3);
