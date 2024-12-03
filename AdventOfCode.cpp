@@ -3,7 +3,6 @@
 #include "day3.h"
 #include "Utils.h"
 
-#include <numeric>
 #include <print>
 
 int main()
@@ -32,7 +31,7 @@ int main()
     std::println();
     {
         const auto input = stu::readFile("day3.txt");
-        const auto sumOfMuls = day3::getMuls(input);
+        const auto sumOfMuls = day3::parseMulInput(input);
 
         std::println("=== DAY 3 ===");
         std::println("The sum of mul expressions is: {}", sumOfMuls);

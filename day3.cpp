@@ -3,16 +3,11 @@
 #include <charconv>
 #include <regex>
 #include <string>
-#include <utility>
-#include <vector>
-
-#include <print>
 
 namespace day3
 {
 	size_t getMuls(const std::string& inInput)
 	{
-		R"(djfjd)";
 		std::regex mulExpressionRegex(R"(mul\(\d+,\d+\))");
 		std::sregex_iterator matchesIt(std::cbegin(inInput), std::cend(inInput), mulExpressionRegex);
 
@@ -32,5 +27,27 @@ namespace day3
 			sumOfMuls += (a * b);
 		}
 		return sumOfMuls;
+	}
+
+	size_t parseMulInput(const std::string& inInput)
+	{
+		std::string mulsToExecute{};
+
+		const auto firstStopInstruction = inInput.find("don't()");
+		mulsToExecute.append(inInput.substr(0, firstStopInstruction));
+
+		auto stop = firstStopInstruction;
+		while (stop != std::string::npos)
+		{
+			const auto start = inInput.find("do()", stop);
+			if (start == std::string::npos) { break; }
+
+			stop = inInput.find("don't()", start);
+			const auto numChars = stop != std::string::npos ? stop - start : inInput.length() - start;
+
+			mulsToExecute.append(inInput.substr(start, numChars));
+		}
+
+		return getMuls(mulsToExecute);
 	}
 }
