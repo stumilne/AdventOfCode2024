@@ -46,7 +46,8 @@ int main()
     {
         startDay(4);
         const auto input = stu::readFile("input/day4.txt");
-        std::println("XMAS found {} times", day4::countAppearances("XMAS", input));
+        std::println("XMAS found {} times", day4::countXmasAppearances(input));
+        std::println("X-MAS found {} times", day4::countCrossMasAppearances(input));
     }
 
     return 0;

@@ -17,7 +17,7 @@ namespace day4
 		return table;
 	}
 
-	size_t countAppearances(const std::string& inWordToFind, const std::string& inInput)
+	size_t countXmasAppearances(const std::string& inInput)
 	{
 		static constexpr std::array<std::pair<int, int>, 8> kDirectionSteps{ std::pair{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1} };
 
@@ -29,7 +29,7 @@ namespace day4
 			const auto& row = wordTable[i];
 			for (int j = 0; j < row.length(); ++j)
 			{
-				if (wordTable[i][j] == 'x' || wordTable[i][j] == 'X')
+				if (wordTable[i][j] == 'X')
 				{
 					xIndices.emplace_back(i, j);
 				}
@@ -51,7 +51,7 @@ namespace day4
 				{
 					x += xStep;
 					const char nextDesired = mas[i];
-					const auto nextX = x + xStep;
+
 					if (x >= 0 && x < wordTable.size())
 					{
 						y += yStep;
@@ -62,11 +62,60 @@ namespace day4
 							{
 								++matched;
 							}
+							else break;
 						}
+						else break;
 					}
+					else break;
 				}
 				if (matched == 3) { ++wordsFound; };
 			}		
+		}
+		return wordsFound;
+	}
+	size_t countCrossMasAppearances(const std::string& inInput)
+	{
+		static constexpr std::array<std::pair<int, int>, 4> kDirectionSteps{ std::pair{-1, 1}, {1, -1}, {-1, -1}, {1, 1} };
+
+		const auto wordTable = stringToTable(inInput);
+
+		std::vector<std::pair<int, int>> xIndices;
+		for (int i = 0; i < wordTable.size(); ++i)
+		{
+			const auto& row = wordTable[i];
+			for (int j = 0; j < row.length(); ++j)
+			{
+				if (wordTable[i][j] == 'A')
+				{
+					xIndices.emplace_back(i, j);
+				}
+			}
+		}
+
+		size_t wordsFound = 0;
+		for (auto&& [xStart, yStart] : xIndices)
+		{
+			const auto row = wordTable[xStart];
+			std::string found;
+
+			for (auto&& [xStep, yStep] : kDirectionSteps)
+			{
+				int x = xStart;
+				int y = yStart;
+				x += xStep;
+
+				if (x >= 0 && x < wordTable.size())
+				{
+					y += yStep;
+					if (y >= 0 && y < row.length())
+					{
+						found += wordTable[x][y];
+					}
+					else break;
+				}
+				else break;
+			}
+			if (found.length() == 4 && (found == "SMSM" || found == "SMMS" || found == "MSMS" || found == "MSSM")) ++wordsFound;
 		}
 		return wordsFound;
 	}
