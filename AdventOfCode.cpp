@@ -1,6 +1,7 @@
 #include "Day1.h"
 #include "Day2.h"
 #include "day3.h"
+#include "Day4.h"
 #include "Utils.h"
 
 #include <print>
@@ -40,6 +41,12 @@ int main()
 
         startDay(3);
         std::println("The sum of mul expressions is: {}", sumOfMuls);
+    }
+
+    {
+        startDay(4);
+        const auto input = stu::readFile("input/day4.txt");
+        std::println("XMAS found {} times", day4::countAppearances("XMAS", input));
     }
 
     return 0;
